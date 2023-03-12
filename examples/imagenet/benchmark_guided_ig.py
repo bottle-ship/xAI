@@ -3,12 +3,12 @@ import typing as t
 import numpy as np
 import torch
 import torch.nn as nn
-from captum.attr import visualization as viz
 from matplotlib.colors import LinearSegmentedColormap
 from saliency.core import GuidedIG
 
 from feature_attributions.algorithms import GuidedIntegratedGradients
 from feature_attributions.problems import ImageNetProblem
+from feature_attributions.utils.visualization import visualize_image_attr_multiple
 
 
 class ModelWrapper(nn.Module):
@@ -50,11 +50,12 @@ def plot_image_attribution(image: np.ndarray, attribution: np.ndarray):
     default_cmap = LinearSegmentedColormap.from_list(
         "custom blue", [(0, "#ffffff"), (0.25, "#000000"), (1, "#000000")], N=256
     )
-    fig, _ = viz.visualize_image_attr_multiple(
+    fig, _ = visualize_image_attr_multiple(
         attribution,
         image,
-        ["original_image", "heat_map"],
-        ["all", "positive"],
+        ["original_image", "blended_heat_map", "saliency"],
+        ["all", "positive", "positive"],
+        fig_size=(12, 6),
         cmap=default_cmap,
         show_colorbar=True
     )
